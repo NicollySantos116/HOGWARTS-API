@@ -7,7 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js"
   },
-  "keywords": [ "JavaScript","HarryPotter","SENAI"],
+  "keywords": [
+    "JavaScript",
+    "HarryPotter",
+    "SENAI"
+  ],
   "author": "Nicolly Santos",
   "license": "MIT",
   "description": "Criação de um servidor com a exibição de bruxos",
