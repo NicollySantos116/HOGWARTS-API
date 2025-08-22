@@ -83,11 +83,21 @@ app.get("/bruxos/nome/:nome", (req, res) => {
     } else {
         // Se nao existir, enviar feedback e status 404
         res.status(404).json({
-            mensagem: "Bruxo(s) nao encontrado(s)!"
+            mensagem: "Nenhum bruxo com esse nome encontrado!"
         });
     }
 });
 
+ // rota para buscar bruxos mortos
+ app.get("/bruxos/vivos/nao",(req,res) => {
+  const resultado = bruxos.filter((b) => !b.status);
+
+  if(resultado){
+    res.status(200).json(resultado)
+  }else{
+    res.status(404).json({erro: "Nenhum bruxo morto encontrado 🔪"})
+  }
+ })
 
 // get by casa
 app.get("/bruxos/casa/:casa", (req, res) => {
