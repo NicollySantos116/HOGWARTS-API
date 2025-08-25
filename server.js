@@ -1,7 +1,9 @@
 import express from "express";
 import bruxos from "./src/data/bruxos.js";
+import dados from "./src/data/dados.js";
 
 const serverPort = 3000;
+const {varinhas,pocoes,animais} = dados
 const app = express();
 
 app.use(express.json());
@@ -43,29 +45,93 @@ app.get('/', (req, res) => {
 // Rotas dos bruxos por ID
 app.get("/bruxos/:id", (req, res) => {
 
+  let id = req.params.id;
+
+  id = parseInt(id);
+  
+  const bruxo = bruxos.find(b => b.id === id);
+
+  if(bruxo) {
+   res.status(200).json(bruxo)
+  } else {
+      
+      res.status(404).json({
+          mensagem: "Bruxo não encontrado !"
+      });
+  }
+})
+
+// Rotas das poções por ID
+app.get("/pocoes/:id", (req, res) => {
+
     let id = req.params.id;
 
     id = parseInt(id);
     
-    const bruxo = bruxos.find(b => b.id === id);
+    const pocoes = pocoes.find(b => b.id === id);
 
-    if(bruxo) {
-     res.status(200).json(bruxo)
+    if(pocoes) {
+     res.status(200).json(pocoes)
     } else {
         
         res.status(404).json({
-            mensagem: "Bruxo não encontrado !"
+            mensagem: `Poção com id ${id} não encontrado !`
         });
     }
 })
-app.listen(serverPort, () => {
-    console.log(`Servidor Funcionando na porta ${serverPort}`)
-});
+
+// Rotas dos animais por ID
+app.get("/animais/:id", (req,res) => {
+
+  let id = req.params.id;
+  id= parseInt(id);
+  const animais = animais.find(b => b.id === id);
+
+  if(animais){
+      res.status(200).json(animais)
+  } else{
+      res.status(404).json({
+          mensagem: `Animal com id ${id} não encontrado !`
+      });
+  } 
+})
+
+// Rotas das varinhas por ID
+app.get("/varinhas/:id", (req,res) => {
+
+  let id = req.params.id;
+  id= parseInt(id);
+  const varinhas = varinhas.find(b => b.id === id);
+
+  if(varinhas){
+      res.status(200).json(varinhas)
+  } else{
+      res.status(404).json({
+          mensagem: `Varinha com id ${id} não encontrado !`
+      });
+  } 
+})
 
 // Rota dos bruxos
   app.get('/bruxos', (req, res) => {
   res.json(bruxos);
 });
+
+// Rota varinhas
+app.get('/varinhas', (req, res) => {
+  res.json(varinhas);
+});
+
+// Rota animais
+app.get('/animais', (req, res) => {
+  res.json(animais);
+});
+
+// Rota poções
+app.get('/pocoes', (req, res) => {
+  res.json(pocoes);
+});
+
 
 // get by name
 app.get("/bruxos/nome/:nome", (req, res) => {
@@ -98,6 +164,7 @@ app.get("/bruxos/nome/:nome", (req, res) => {
     res.status(404).json({erro: "Nenhum bruxo morto encontrado 🔪"})
   }
  })
+ 
 
 // get by casa
 app.get("/bruxos/casa/:casa", (req, res) => {
