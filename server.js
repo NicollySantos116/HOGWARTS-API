@@ -68,10 +68,10 @@ app.get("/pocoes/:id", (req, res) => {
 
     id = parseInt(id);
     
-    const pocoes = pocoes.find(b => b.id === id);
+    const pocao = pocoes.find(b => b.id === id);
 
-    if(pocoes) {
-     res.status(200).json(pocoes)
+    if(pocao) {
+     res.status(200).json(pocao)
     } else {
         
         res.status(404).json({
@@ -85,10 +85,10 @@ app.get("/animais/:id", (req,res) => {
 
   let id = req.params.id;
   id= parseInt(id);
-  const animais = animais.find(b => b.id === id);
+  const animal = animais.find(b => b.id === id);
 
-  if(animais){
-      res.status(200).json(animais)
+  if(animal){
+      res.status(200).json(animal)
   } else{
       res.status(404).json({
           mensagem: `Animal com id ${id} não encontrado !`
@@ -101,10 +101,10 @@ app.get("/varinhas/:id", (req,res) => {
 
   let id = req.params.id;
   id= parseInt(id);
-  const varinhas = varinhas.find(b => b.id === id);
+  const varinha = varinhas.find(b => b.id === id);
 
-  if(varinhas){
-      res.status(200).json(varinhas)
+  if(varinha){
+      res.status(200).json(varinha)
   } else{
       res.status(404).json({
           mensagem: `Varinha com id ${id} não encontrado !`
