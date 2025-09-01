@@ -3,7 +3,7 @@ import bruxos from "./src/data/bruxos.js";
 import dados from "./src/data/dados.js";
 
 const serverPort = 3000;
-const {varinhas,pocoes,animais} = dados
+const {varinhas , pocoes, animais, casas} = dados
 const app = express();
 
 app.use(express.json());
@@ -80,79 +80,6 @@ app.get("/pocoes/:id", (req, res) => {
     }
 })
 
-// Rotas dos animais por ID
-app.get("/animais/:id", (req,res) => {
-
-  let id = req.params.id;
-  id= parseInt(id);
-  const animal = animais.find(b => b.id === id);
-
-  if(animal){
-      res.status(200).json(animal)
-  } else{
-      res.status(404).json({
-          mensagem: `Animal com id ${id} não encontrado !`
-      });
-  } 
-})
-
-// Rotas das varinhas por ID
-app.get("/varinhas/:id", (req,res) => {
-
-  let id = req.params.id;
-  id= parseInt(id);
-  const varinha = varinhas.find(b => b.id === id);
-
-  if(varinha){
-      res.status(200).json(varinha)
-  } else{
-      res.status(404).json({
-          mensagem: `Varinha com id ${id} não encontrado !`
-      });
-  } 
-})
-
-// Rota dos bruxos
-  app.get('/bruxos', (req, res) => {
-  res.json(bruxos);
-});
-
-// Rota varinhas
-app.get('/varinhas', (req, res) => {
-  res.json(varinhas);
-});
-
-// Rota animais
-app.get('/animais', (req, res) => {
-  res.json(animais);
-});
-
-// Rota poções
-app.get('/pocoes', (req, res) => {
-  res.json(pocoes);
-});
-
-
-// get by name
-app.get("/bruxos/nome/:nome", (req, res) => {
-    // Pegar o nome da url
-    let nome = req.params.nome.toLowerCase();
-
-    // Buscar no array/objeto/json usando "contains"
-    const bruxosEncontrados = bruxos.filter(b => 
-        b.nome.toLowerCase().includes(nome)
-    );
-
-    if (bruxosEncontrados.length > 0) {
-        // Se encontrar, retorna todos os que batem
-        res.status(200).json(bruxosEncontrados);
-    } else {
-        // Se nao existir, enviar feedback e status 404
-        res.status(404).json({
-            mensagem: "Nenhum bruxo com esse nome encontrado!"
-        });
-    }
-});
 
  // rota para buscar bruxos mortos
  app.get("/bruxos/vivos/nao",(req,res) => {
@@ -165,24 +92,7 @@ app.get("/bruxos/nome/:nome", (req, res) => {
   }
  })
  
-
-// get by casa
-app.get("/bruxos/casa/:casa", (req, res) => {
-    // Pegar a casa da url
-    let casa = req.params.casa;
-    // Buscar no array/objeto/json
-    const bruxosDaCasa = bruxos.filter(b => b.casa.toLowerCase() === casa.toLowerCase());
-    if (bruxosDaCasa.length > 0) {
-        // Se existir enviar na resposta com o res e o status 200
-        res.status(200).json(bruxosDaCasa);
-    } else {
-        // Se nao existir, enviar na resposta um feedback e o status 400
-        res.status(404).json({
-            mensagem: "Nenhum bruxo encontrado nessa casa!"
-        })
-    }
-});
-
+// Rota para buscar todos os bruxos com filtro
 app.get('/bruxos', (req, res) => {
   const { casa, ano, especialidade, nome } = req.query;
   let resultado = bruxos;
@@ -209,6 +119,25 @@ app.get('/bruxos', (req, res) => {
   });
 });
 
+// Rota animais
+app.get('/animais', (req, res) => {
+  const {nome , tipo} = req.query;
+  let resultado = animais;
+
+  if (nome) {
+      resultado = resultado.filter((b) => b.nome.toLowerCase().includes(nome.toLowerCase()));
+  }
+
+  if (tipo) {
+    resultado = resultado.filter(b => b.tipo == tipo);
+  }
+  res.status(200).json({
+    total: resultado.length,
+    data: resultado
+  });
+});
+
+// Rota para criar bruxos
 app.post('/bruxos', (req, res) => {
     // Acessando dados do body
     const { nome, casa, ano, varinha, mascote, patrono, especialidade, vivo } = req.body;
@@ -246,8 +175,86 @@ app.post('/bruxos', (req, res) => {
     });
 });
 
+
+// Rota varinhas
+app.get("/varinhas", (req, res) => {
+  const {material, nucleo, comprimento} = req.query;
+  let resultado = varinhas;
+
+  if (material) {
+      resultado = resultado.filter((b) => b.material.toLowerCase().includes(material.toLowerCase()));
+  }
+
+  if (nucleo) {
+    resultado = resultado.filter(b => b.nucleo.toLowerCase().includes(nucleo.toLowerCase()));
+  }
+
+  if (comprimento) {
+    resultado = resultado.filter(b => b.comprimento.toLowerCase().includes(comprimento.toLowerCase()));
+  }
+
+  res.status(200).json({
+    total: resultado.length,
+    data: resultado
+  });
+});
+
+//Rota para criar varinha
+app.post('/varinhas', (req, res) => {
+  // Acessando dados do body
+  const { material, nucleo, comprimento } = req.body;
+  
+  console.log('Dados recebidos:', req.body);
+  
+  // Validação básica
+  if (!material || !nucleo || !comprimento) {
+      return res.status(400).json({
+          success: false,
+          message: "Material, núcleo e comprimento são obrigatórios para criar uma varinha!"
+      });
+  }
+  
+  // Criar nova varinha
+  const novaVarinha = {
+      id: varinhas.length + 1,
+      material,
+      nucleo,
+      comprimento
+  };
+  
+  // Adicionar à lista de Varinhas
+  varinhas.push(novaVarinha);
+  
+  res.status(201).json({
+      success: true,
+      message: "Nova Varinha adicionada a Hogwarts!",
+      data: novaVarinha 
+  });
+});
+
+// Rota poções
+app.get('/pocoes', (req, res) => {
+  const {nome , tipo} = req.query;
+  let resultado = pocoes;
+
+  console.log(nome)
+
+  if (nome) {
+      resultado = resultado.filter((b) => b.nome.toLowerCase().includes(nome.toLowerCase()));
+  }
+
+  if (tipo) {
+    resultado = resultado.filter(b => b.tipo.toLowerCase().includes(tipo.toLowerCase()));
+  }
+  res.status(200).json({
+    total: resultado.length,
+    data: resultado
+  });
+});
+
+
 // Iniciar servidor
 app.listen(serverPort, () => {
   console.log(`⚡ Servidor Hogwarts iniciado em: http://localhost:${serverPort}`);
   console.log(`🏰 Pronto para receber novos bruxos!`);
-});
+}); 

@@ -54,17 +54,6 @@ const bruxos = [
         especialidade: "Ver criaturas imaginárias (ou não) 👻",
         status: true,
     },
-    {
-        id: 6,
-        nome: "Neville Longbottom",
-        casa: "Grifinória",
-        ano: 7,
-        varinha: "Erva-doce e núcleo de dragão, 34cm",
-        mascote: "Sapo (Trevor)",
-        patrono: "Lebre",
-        especialidade: "Herbologia e coragem",
-        status: true,
-    }
 ];
 
 const casas =[
@@ -84,11 +73,11 @@ const varinhas =[
 
 
 const animais =[
-    {id: 1, nome:"Coruja", tipo: "Correio/Companhia"},
+    {id: 1, nome:"Coruja", tipo: "Correio"},
     {id: 2, nome:"Gato", tipo: "Companhia"},
     {id: 3, nome:"Sapo", tipo: "Companhia"},
     {id: 4, nome:"Rato", tipo: "Companhia"},
-   
+    {id: 5, nome:"Lebre", tipo: "Companhia"},
 ];
 
 
