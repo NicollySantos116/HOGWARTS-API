@@ -252,6 +252,30 @@ app.get('/pocoes', (req, res) => {
   });
 });
 
+// Contagem de bruxos por casa
+app.get("/stats", (req,res) =>{
+  const casasStats ={
+    Grifinoria: bruxos.filter(b => b.casa === " Grifinória").length,
+    Sonserina: bruxos.filter(b => b.casa === "Sonserina").length,
+    Corvinal: bruxos.filter(b => b.casa === " Corvinal").length,
+    LufaLufa: bruxos.filter(b => b.casa === " LufaLufa").length,
+  };
+ 
+  // Pegando materiais de varinha
+const materiais = varinhas.map(V=> V.material);
+
+res.status(200).json({
+ bruxosPorCasa: casasStats,
+ materiaisdeVarinha: materiais
+});
+});
+
+app.use((req,res) => {
+  res.status(404).json({
+    success:false,
+    message: "Essa rota não existe em Hogwats! 🧙‍♂️"
+  })
+})
 
 // Iniciar servidor
 app.listen(serverPort, () => {
